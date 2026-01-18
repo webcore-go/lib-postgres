@@ -4,8 +4,8 @@ import (
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
 	libsql "github.com/webcore-go/lib-sql"
-	"github.com/webcore-go/webcore/app/config"
-	"github.com/webcore-go/webcore/app/loader"
+	"github.com/webcore-go/webcore/infra/config"
+	"github.com/webcore-go/webcore/port"
 )
 
 type PostgresLoader struct {
@@ -20,7 +20,7 @@ func (a *PostgresLoader) Name() string {
 	return a.name
 }
 
-func (l *PostgresLoader) Init(args ...any) (loader.Library, error) {
+func (l *PostgresLoader) Init(args ...any) (port.Library, error) {
 	config := args[1].(config.DatabaseConfig)
 	dsn := libsql.BuildDSN(config)
 
