@@ -1,10 +1,13 @@
 package postgres
 
 import (
+	"fmt"
+
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
 	libsql "github.com/webcore-go/lib-sql"
 	"github.com/webcore-go/webcore/infra/config"
+	"github.com/webcore-go/webcore/infra/logger"
 	"github.com/webcore-go/webcore/port"
 )
 
@@ -38,6 +41,15 @@ func (l *PostgresLoader) Init(args ...any) (port.Library, error) {
 	}
 
 	db.Connect()
+
+	// Set search_path for PostgreSQL if SchemaName is specified
+	if config.SchemaName != "" {
+		_, err := db.DB.Exec("SET search_path TO ?", config.SchemaName)
+		if err != nil {
+			return nil, fmt.Errorf("failed to set search_path to schema '%s': %w", config.SchemaName, err)
+		}
+		logger.Debug("PostgreSQL search_path set", "schema", config.SchemaName)
+	}
 
 	return db, nil
 }
