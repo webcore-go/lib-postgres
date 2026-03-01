@@ -35,6 +35,7 @@ func (l *PostgresLoader) Init(args ...any) (port.Library, error) {
 	// Set up Bun SQL database wrapper
 	db.SetBunDB(driver, dialect)
 
+	logger.Debug("Attempting to connect to PostgreSQL with", "URI", dsn)
 	err := db.Install(args...)
 	if err != nil {
 		return nil, err
@@ -51,5 +52,6 @@ func (l *PostgresLoader) Init(args ...any) (port.Library, error) {
 		logger.Debug("PostgreSQL search_path set", "schema", config.SchemaName)
 	}
 
+	logger.Info("Successfully connected to PostgreSQL")
 	return db, nil
 }
